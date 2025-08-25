@@ -1,6 +1,8 @@
 # business_helper_app.py
 import streamlit as st
 import pandas as pd
+import numpy as np
+
 from prophet import Prophet
 from prophet.diagnostics import cross_validation, performance_metrics
 import matplotlib.pyplot as plt
@@ -157,9 +159,16 @@ if uploaded_file:
 
                     preds = model.predict(X_test)
                     mae = mean_absolute_error(y_test, preds)
-                    rmse = mean_squared_error(y_test, preds, squared=False)
+                    # rmse = mean_squared_error(y_test, preds, squared=False)
+                    # make sure vectors are 1D, then compute RMSE manually
+                    y_true = np.ravel(y_test)
+                    y_pred = np.ravel(preds)
+
+                    mse = mean_squared_error(y_true, y_pred)  # no 'squared' kwarg (works on older sklearn)
+                    rmse = mse ** 0.5
 
                     fold_results.append({"fold": fold+1, "mae": mae, "rmse": rmse})
+                    st.metric("Last fold RMSE", f"{fold_results[-1]['rmse']:.4f}")
 
                 st.write(pd.DataFrame(fold_results))
 
