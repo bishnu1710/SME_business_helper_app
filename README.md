@@ -40,7 +40,7 @@ pip install -r requirements.txt
 ```bash
 python app.py
 ````
-
+### 📂 Project Structure
 SME_business_helper_app/
 │── app.py              # Main application script
 │── requirements.txt    # Python dependencies
