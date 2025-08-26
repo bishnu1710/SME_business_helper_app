@@ -12,4 +12,4 @@ matplotlib==3.8.4
 prophet==1.1.5
 cmdstanpy==1.2.5
 holidays==0.56
-yfinance==0.2.40
+yfinance==0.2.43
