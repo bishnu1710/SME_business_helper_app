@@ -69,12 +69,42 @@ if uploaded_file:
             )
 
       
+        # ticker = "^NSEI" if country == "India" else ("^GSPC" if country == "US" else "^FTSE")
+        # start_date = max(df["date"].min(), pd.Timestamp.today() - pd.DateOffset(years=5))
+
+        # st.info(f"📡 Fetching {ticker} market index as proxy for inflation...")   # moved here
+
+        # infl_df = fetch_market_data(ticker, start=start_date, end=pd.Timestamp.today())
         ticker = "^NSEI" if country == "India" else ("^GSPC" if country == "US" else "^FTSE")
         start_date = max(df["date"].min(), pd.Timestamp.today() - pd.DateOffset(years=5))
 
-        st.info(f"📡 Fetching {ticker} market index as proxy for inflation...")   # moved here
-
+        # --- Try fetch with fallback ---
+        st.info(f"📡 Fetching {ticker} market index as proxy for inflation...")
         infl_df = fetch_market_data(ticker, start=start_date, end=pd.Timestamp.today())
+
+        # If no data, fallback to S&P500 (^GSPC)
+        if infl_df.empty and ticker != "^GSPC":
+            st.info("📡 Primary index empty, falling back to S&P500 (^GSPC)...")
+            infl_df = fetch_market_data("^GSPC", start=start_date, end=pd.Timestamp.today())
+
+        # If still empty, create safe empty DataFrame
+        if infl_df.empty:
+            infl_df = pd.DataFrame(columns=["date", "inflation"])
+        else:
+            # --- Fix MultiIndex columns if present ---
+            if isinstance(infl_df.columns, pd.MultiIndex):
+                infl_df.columns = ["_".join([c for c in col if c]) for col in infl_df.columns]
+
+            infl_df = infl_df.reset_index()
+
+            # --- Dynamically detect a 'Close' column ---
+            close_cols = [c for c in infl_df.columns if "Close" in c]
+
+            if close_cols:
+                chosen_col = close_cols[0]
+                infl_df = infl_df.rename(columns={chosen_col: "inflation", "Date": "date"})
+            else:
+                infl_df = pd.DataFrame(columns=["date", "inflation"])
 
         # --- Fix MultiIndex columns if present ---
         if isinstance(infl_df.columns, pd.MultiIndex):
