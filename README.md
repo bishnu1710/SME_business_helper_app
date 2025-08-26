@@ -40,6 +40,7 @@ pip install -r requirements.txt
 ```bash
 python app.py
 ````
+
 ### 📂 Project Structure
 SME_business_helper_app/
 │── app.py              # Main application script
@@ -47,3 +48,5 @@ SME_business_helper_app/
 │── venv/               # Virtual environment (ignored in git)
 │── .gitignore
 │── README.md
+### streamlit
+[streamlit_app](https://smebusinessapp-bishnu.streamlit.app/)
