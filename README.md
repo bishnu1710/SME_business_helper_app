@@ -42,11 +42,14 @@ python app.py
 ````
 
 ### 📂 Project Structure
+```
 SME_business_helper_app/
 │── app.py              # Main application script
 │── requirements.txt    # Python dependencies
 │── venv/               # Virtual environment (ignored in git)
 │── .gitignore
 │── README.md
+
+```
 ### streamlit
 [streamlit_app](https://smebusinessapp-bishnu.streamlit.app/)
